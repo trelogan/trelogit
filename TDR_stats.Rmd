@@ -1,0 +1,61 @@
+---
+title: "TDR_stats"
+author: "Jessica Trelogan"
+date: "6/3/2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+
+# Trying to see if I can use ggplot to automate visualizing the TDR reports that come bi-weekly
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library("ggplot2")
+library("dplyr")
+
+setwd("C:/programming/trelogit")
+```
+
+
+# Read the data in
+```{r read_data}
+
+dataverses_raw <- readxl::read_xlsx("data/TDR_reports/utexas-dataverse-reports_13mar19.xlsx", sheet = "dataverses")
+datasets_raw <- readxl::read_xlsx("data/TDR_reports/utexas-dataverse-reports_13mar19.xlsx", sheet = "datasets")
+users_raw <- readxl::read_xlsx("data/TDR_reports/utexas-dataverse-reports_13mar19.xlsx", sheet = "users")
+
+```
+
+
+# now subset the data
+```{r subset things}
+datasets <- filter(datasets_raw, dataverse != "utexas")
+groupDatasets <- group_by(depositDate)
+```
+
+
+
+# Plot something
+```{r plot}
+
+depositDate <- as.Date(datasets$dateOfDeposit)
+depositor <- datasets$depositor
+
+ggplot(data = datasets,  color = "black", mapping = aes(x = depositDate, fill = depositor)) + 
+   geom_bar(color = "black") + 
+   labs(
+     x = "Date Deposited",          # x axis title
+     y = "Number of Datasets",      # y axis title
+     title = "UT-Austin Deposits"
+    
+  ) +
+  theme_minimal() 
+
+  
+
+
+```
+
